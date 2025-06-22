@@ -32,7 +32,7 @@ const handleLogout = async () => {
           <DropdownMenuContent align="end">
             <DropdownMenuItem @click="router.push('/')"> Home </DropdownMenuItem>
             <DropdownMenuItem @click="router.push('/profile')"> My Profile </DropdownMenuItem>
-            <DropdownMenuItem @click="router.push('/profile/edit')">
+            <DropdownMenuItem @click="router.push('/profile?section=basic')">
               Edit Profile
             </DropdownMenuItem>
             <DropdownMenuItem @click="handleLogout"> Logout </DropdownMenuItem>

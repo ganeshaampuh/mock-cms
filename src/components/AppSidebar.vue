@@ -7,22 +7,26 @@ import {
   SidebarHeader,
 } from '@/components/ui/sidebar'
 
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 const items = [
   {
     title: 'Basic Details',
-    url: '#',
+    url: '/profile?section=basic',
   },
   {
     title: 'Additional Details',
-    url: '#',
+    url: '/profile?section=additional',
   },
   {
     title: 'Spouse Details',
-    url: '#',
+    url: '/profile?section=spouse',
   },
   {
     title: 'Personal Preferences',
-    url: '#',
+    url: '/profile?section=preferences',
   },
 ]
 </script>
@@ -33,7 +37,7 @@ const items = [
     <SidebarContent>
       <SidebarGroup v-for="item in items" :key="item.title">
         <SidebarGroupContent>
-          <SidebarGroupItem>
+          <SidebarGroupItem @click="router.push(item.url)" class="cursor-pointer">
             <SidebarGroupItemLabel class="pl-8">
               {{ item.title }}
             </SidebarGroupItemLabel>

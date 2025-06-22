@@ -92,13 +92,35 @@ export async function getProfile(profileId: string) {
 }
 
 export async function updateProfile(profile: {
-  id: string
-  salutation: string
-  first_name: string
-  last_name: string
-  email: string
+  id: string | null
+  salutation: string | null
+  first_name: string | null
+  last_name: string | null
+  email: string | null
+
+  home_address: string | null
+  country: string | null
+  date_of_birth: string | null
+  gender: string | null
+  marital_status: string | null
+
+  spouse_salutation: string | null
+  spouse_first_name: string | null
+  spouse_last_name: string | null
+
+  hobbies_and_interests: string | null
+  favorite_sports: string | null
+  preferred_music_genres: string | null
+  preferred_shows_and_movies: string | null
 }) {
-  const { data, error } = await supabase.from('profiles').upsert(profile).eq('id', profile.id)
+  const filteredPayload = Object.fromEntries(
+    Object.entries(profile).filter(([_, value]) => value !== null),
+  )
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(filteredPayload)
+    .eq('id', profile.id)
 
   if (error) {
     throw error

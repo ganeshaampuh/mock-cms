@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import AppSidebar from '@/components/AppSidebar.vue'
-// import AppHeader from '@/components/AppHeader.vue'
+import AppHeader from '@/components/AppHeader.vue'
 
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+import { SidebarProvider } from '@/components/ui/sidebar'
 import { RouterView } from 'vue-router'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -13,14 +13,14 @@ import 'vue-sonner/style.css'
 
 const route = useRoute()
 const showSidebar = computed(() => route.meta.showSidebar)
+const showHeader = computed(() => route.meta.showHeader)
 </script>
 
 <template>
-  <!-- <AppHeader /> -->
+  <AppHeader v-if="showHeader" />
   <SidebarProvider>
     <AppSidebar v-if="showSidebar" />
-    <main class="p-10 w-full">
-      <SidebarTrigger v-if="showSidebar" />
+    <main class="w-full">
       <RouterView />
     </main>
   </SidebarProvider>

@@ -16,6 +16,7 @@ const router = createRouter({
       meta: {
         requiresAuth: false,
         showSidebar: false,
+        showHeader: false,
       },
     },
     {
@@ -25,6 +26,7 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
         showSidebar: true,
+        showHeader: true,
       },
     },
     {
@@ -34,6 +36,7 @@ const router = createRouter({
       meta: {
         requiresAuth: false,
         showSidebar: false,
+        showHeader: false,
       },
     },
   ],
