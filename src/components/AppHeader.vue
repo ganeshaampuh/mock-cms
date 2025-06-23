@@ -19,7 +19,7 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <header class="border-b">
+  <header class="border-b bg-background/50 backdrop-blur-sm">
     <div class="flex h-16 items-center px-4">
       <div class="ml-auto flex items-center space-x-4">
         <DropdownMenu>

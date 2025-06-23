@@ -87,6 +87,7 @@ const onSubmit = handleSubmit((values) => {
       <p class="text-sm text-muted-foreground">
         No account? <router-link to="/register">Register here.</router-link>
       </p>
+      <p class="text-sm text-muted-foreground">Demo account: test@gmail.com / 123123</p>
     </form>
   </div>
 </template>

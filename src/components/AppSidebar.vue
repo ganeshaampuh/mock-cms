@@ -7,13 +7,14 @@ import {
   SidebarHeader,
 } from '@/components/ui/sidebar'
 
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import { getUser, getProfile, createProfile } from '@/lib/supabase'
 
 const router = useRouter()
+const route = useRoute()
 
 const items = ref([
   {
@@ -30,8 +31,32 @@ const items = ref([
   },
 ])
 
+const fetchNewItems = async () => {
+  const data = await getUser()
+
+  try {
+    const profile = await getProfile(data.user?.id)
+
+    const isShowSpouse = profile.marital_status === 'Married'
+
+    if (isShowSpouse && !items.value.some((item) => item.url === '/profile?section=spouse')) {
+      items.value.push({
+        title: 'Spouse Details',
+        url: '/profile?section=spouse',
+      })
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+watch(route, () => {
+  fetchNewItems()
+})
+
 onMounted(async () => {
   const data = await getUser()
+
   try {
     const profile = await getProfile(data.user?.id)
 

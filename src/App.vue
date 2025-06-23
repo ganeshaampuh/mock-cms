@@ -27,3 +27,11 @@ const showHeader = computed(() => route.meta.showHeader)
   </SidebarProvider>
   <Toaster />
 </template>
+
+<style>
+body {
+  background: url('@/assets/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  background-color: transparent;
+}
+</style>
