@@ -11,7 +11,7 @@ import { onMounted, ref } from 'vue'
 
 import { useRouter } from 'vue-router'
 
-import { getUser, getProfile } from '@/lib/supabase'
+import { getUser, getProfile, createProfile } from '@/lib/supabase'
 
 const router = useRouter()
 
@@ -32,15 +32,21 @@ const items = ref([
 
 onMounted(async () => {
   const data = await getUser()
-  const profile = await getProfile(data.user?.id)
+  try {
+    const profile = await getProfile(data.user?.id)
 
-  const isShowSpouse = profile.marital_status === 'Married'
+    const isShowSpouse = profile.marital_status === 'Married'
 
-  if (isShowSpouse) {
-    items.value.push({
-      title: 'Spouse Details',
-      url: '/profile?section=spouse',
-    })
+    if (isShowSpouse) {
+      items.value.push({
+        title: 'Spouse Details',
+        url: '/profile?section=spouse',
+      })
+    }
+  } catch (error) {
+    console.log('Profile not found, creating...')
+    await createProfile(data.user?.id)
+    throw error
   }
 })
 </script>

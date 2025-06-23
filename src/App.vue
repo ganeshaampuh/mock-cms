@@ -2,7 +2,7 @@
 import AppSidebar from './components/AppSidebar.vue'
 import AppHeader from './components/AppHeader.vue'
 
-import { SidebarProvider } from '@/components/ui/sidebar'
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { RouterView } from 'vue-router'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -20,6 +20,7 @@ const showHeader = computed(() => route.meta.showHeader)
   <AppHeader v-if="showHeader" />
   <SidebarProvider>
     <AppSidebar v-if="showSidebar" />
+    <SidebarTrigger />
     <main class="w-full px-10">
       <RouterView />
     </main>

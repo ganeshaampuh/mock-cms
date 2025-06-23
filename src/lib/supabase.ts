@@ -23,29 +23,6 @@ export async function registerUser(userId: string, password: string) {
       throw error
     }
 
-    if (data.user?.id) {
-      await supabase.from('profiles').insert({
-        id: data.user?.id,
-        salutation: '',
-        first_name: '',
-        last_name: '',
-        email: '',
-        profile_picture: '',
-        home_address: '',
-        country: '',
-        date_of_birth: '',
-        gender: '',
-        marital_status: '',
-        spouse_salutation: '',
-        spouse_first_name: '',
-        spouse_last_name: '',
-        hobbies_and_interests: '',
-        favorite_sports: '',
-        preferred_music_genres: '',
-        preferred_shows_and_movies: '',
-      })
-    }
-
     return data
   } catch (error) {
     console.error('Error registering user:', error)
@@ -157,6 +134,18 @@ export async function updateProfile(profile: {
     .from('profiles')
     .update(filteredPayload)
     .eq('id', profile.id)
+
+  if (error) {
+    throw error
+  }
+
+  return data
+}
+
+export async function createProfile(profileId: string) {
+  const { data, error } = await supabase.from('profiles').insert({
+    id: profileId,
+  })
 
   if (error) {
     throw error
