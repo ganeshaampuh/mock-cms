@@ -174,7 +174,26 @@ const cancel = () => {
   isEdit.value = false
 }
 
-const onSubmit = handleSubmit((values) => {
+interface FormValues {
+  salutation?: string
+  firstName?: string
+  lastName?: string
+  email?: string
+  homeAddress?: string
+  country?: string
+  dateOfBirth?: string
+  gender?: string
+  maritalStatus?: string
+  spouseSalutation?: string
+  spouseFirstName?: string
+  spouseLastName?: string
+  hobbiesAndInterests?: string
+  favoriteSports?: string
+  preferredMusicGenres?: string
+  preferredShowsAndMovies?: string
+}
+
+const onSubmit = handleSubmit((values: FormValues) => {
   if (!profile.value!.id) {
     toast({
       title: 'Profile not found',
@@ -254,7 +273,7 @@ watch(isEdit, async (newVal) => {
           firstName: data?.first_name ?? '',
           lastName: data?.last_name ?? '',
           email: data?.email ?? '',
-        },
+        } as FormValues,
       })
     }
 
@@ -266,7 +285,7 @@ watch(isEdit, async (newVal) => {
           dateOfBirth: data?.date_of_birth ?? '',
           gender: data?.gender ?? '',
           maritalStatus: data?.marital_status ?? '',
-        },
+        } as FormValues,
       })
     }
 
@@ -276,7 +295,7 @@ watch(isEdit, async (newVal) => {
           spouseSalutation: data?.spouse_salutation ?? '',
           spouseFirstName: data?.spouse_first_name ?? '',
           spouseLastName: data?.spouse_last_name ?? '',
-        },
+        } as FormValues,
       })
     }
 
@@ -287,7 +306,7 @@ watch(isEdit, async (newVal) => {
           favoriteSports: data?.favorite_sports ?? '',
           preferredMusicGenres: data?.preferred_music_genres ?? '',
           preferredShowsAndMovies: data?.preferred_shows_and_movies ?? '',
-        },
+        } as FormValues,
       })
     }
   }
