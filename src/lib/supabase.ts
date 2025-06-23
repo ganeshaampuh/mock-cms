@@ -23,6 +23,29 @@ export async function registerUser(userId: string, password: string) {
       throw error
     }
 
+    if (data.user?.id) {
+      await supabase.from('profiles').insert({
+        id: data.user?.id,
+        salutation: '',
+        first_name: '',
+        last_name: '',
+        email: '',
+        profile_picture: '',
+        home_address: '',
+        country: '',
+        date_of_birth: '',
+        gender: '',
+        marital_status: '',
+        spouse_salutation: '',
+        spouse_first_name: '',
+        spouse_last_name: '',
+        hobbies_and_interests: '',
+        favorite_sports: '',
+        preferred_music_genres: '',
+        preferred_shows_and_movies: '',
+      })
+    }
+
     return data
   } catch (error) {
     console.error('Error registering user:', error)
@@ -97,6 +120,7 @@ export async function updateProfile(profile: {
   first_name: string | null
   last_name: string | null
   email: string | null
+  profile_picture: string | null
 
   home_address: string | null
   country: string | null
@@ -116,6 +140,18 @@ export async function updateProfile(profile: {
   const filteredPayload = Object.fromEntries(
     Object.entries(profile).filter(([_, value]) => value !== null),
   )
+
+  if (profile.profile_picture && profile.id) {
+    const { data: profilePicture, error: profilePictureError } = await supabase.storage
+      .from('profile-pictures')
+      .upload(profile.id, profile.profile_picture)
+
+    if (profilePictureError) {
+      throw profilePictureError
+    }
+
+    filteredPayload.profile_picture = profilePicture.path
+  }
 
   const { data, error } = await supabase
     .from('profiles')

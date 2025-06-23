@@ -20,7 +20,7 @@ const showHeader = computed(() => route.meta.showHeader)
   <AppHeader v-if="showHeader" />
   <SidebarProvider>
     <AppSidebar v-if="showSidebar" />
-    <main class="w-full">
+    <main class="w-full px-10">
       <RouterView />
     </main>
   </SidebarProvider>

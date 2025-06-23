@@ -36,7 +36,16 @@ const additionalSchema = toTypedSchema(
   z.object({
     homeAddress: z.string().min(1),
     country: z.string().min(1),
-    dateOfBirth: z.string().min(1),
+    dateOfBirth: z.string().refine((date) => {
+      const birthDate = new Date(date)
+      const today = new Date()
+      const age = today.getFullYear() - birthDate.getFullYear()
+      const monthDiff = today.getMonth() - birthDate.getMonth()
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        return age - 1 >= 17
+      }
+      return age >= 17
+    }, 'Must be at least 17 years old'),
     gender: z.string().min(1),
     maritalStatus: z.string().min(1),
   }),
@@ -44,9 +53,9 @@ const additionalSchema = toTypedSchema(
 
 const spouseSchema = toTypedSchema(
   z.object({
-    salutation: z.string().min(1),
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
+    spouseSalutation: z.string().min(1),
+    spouseFirstName: z.string().min(1),
+    spouseLastName: z.string().min(1),
   }),
 )
 
@@ -87,6 +96,7 @@ const profile = ref<{
   firstName: string
   lastName: string
   email: string
+  profilePicture: File | null
 
   homeAddress: string
   country: string
@@ -108,6 +118,7 @@ const profile = ref<{
   firstName: '',
   lastName: '',
   email: '',
+  profilePicture: null,
 
   homeAddress: '',
   country: '',
@@ -136,6 +147,7 @@ const loadProfile = async () => {
   profile.value.firstName = profileData?.first_name ?? ''
   profile.value.lastName = profileData?.last_name ?? ''
   profile.value.email = profileData?.email ?? ''
+  profile.value.profilePicture = profileData?.profile_picture ?? null
 
   profile.value.homeAddress = profileData?.home_address ?? ''
   profile.value.country = profileData?.country ?? ''
@@ -163,8 +175,6 @@ const cancel = () => {
 }
 
 const onSubmit = handleSubmit((values) => {
-  console.log(values)
-
   if (!profile.value!.id) {
     toast({
       title: 'Profile not found',
@@ -217,6 +227,21 @@ const onSubmit = handleSubmit((values) => {
       })
     })
 })
+
+watch(
+  () => route.query.edit as string,
+  async (newVal) => {
+    if (newVal === 'true') {
+      isEdit.value = true
+      return
+    }
+
+    isEdit.value = false
+  },
+  {
+    immediate: true,
+  },
+)
 
 watch(isEdit, async (newVal) => {
   if (newVal) {
@@ -282,6 +307,12 @@ onMounted(async () => {
         <Button @click="isEdit = true" variant="outline"> Edit Profile </Button>
       </div>
       <div class="flex flex-col gap-2 w-full max-w-lg mt-4 text-left">
+        <p class="font-bold">Profile Picture:</p>
+        <img
+          :src="'https://placehold.co/100x100'"
+          alt="Profile Picture"
+          class="w-24 h-24 rounded-full mb-3"
+        />
         <p class="font-bold">Salutation:</p>
         <p class="mb-3">{{ profile.salutation ? profile.salutation : '-' }}</p>
         <p class="font-bold">First Name:</p>
@@ -293,7 +324,7 @@ onMounted(async () => {
       </div>
     </div>
     <div v-else class="flex flex-col items-center justify-start h-screen mt-4">
-      <h1 class="text-2xl font-bold">Basic Details</h1>
+      <h1 class="text-2xl font-bold">Edit Basic Details</h1>
       <form class="flex flex-col gap-4 w-full max-w-lg mt-4" @submit="onSubmit">
         <FormField v-slot="{ componentField }" name="salutation" :validate-on-blur="!isFieldDirty">
           <FormItem>
@@ -367,7 +398,7 @@ onMounted(async () => {
       </div>
     </div>
     <div v-else class="flex flex-col items-center justify-start h-screen mt-4">
-      <h1 class="text-2xl font-bold">Additional Details</h1>
+      <h1 class="text-2xl font-bold">Edit Additional Details</h1>
       <form class="flex flex-col gap-4 w-full max-w-lg mt-4" @submit="onSubmit">
         <FormField v-slot="{ componentField }" name="homeAddress" :validate-on-blur="!isFieldDirty">
           <FormItem>
@@ -463,10 +494,11 @@ onMounted(async () => {
         <p class="font-bold">First Name:</p>
         <p class="mb-3">{{ profile.spouseFirstName ? profile.spouseFirstName : '-' }}</p>
         <p class="font-bold">Last Name:</p>
+        <p class="mb-3">{{ profile.spouseLastName ? profile.spouseLastName : '-' }}</p>
       </div>
     </div>
     <div v-else class="flex flex-col items-center justify-start h-screen mt-4">
-      <h1 class="text-2xl font-bold">Spouse Details</h1>
+      <h1 class="text-2xl font-bold">Edit Spouse Details</h1>
       <form class="flex flex-col gap-4 w-full max-w-lg mt-4" @submit="onSubmit">
         <FormField
           v-slot="{ componentField }"
@@ -559,7 +591,7 @@ onMounted(async () => {
       </div>
     </div>
     <div v-else class="flex flex-col items-center justify-start h-screen mt-4">
-      <h1 class="text-2xl font-bold">Personal Preferences</h1>
+      <h1 class="text-2xl font-bold">Edit Personal Preferences</h1>
       <form class="flex flex-col gap-4 w-full max-w-lg mt-4" @submit="onSubmit">
         <FormField
           v-slot="{ componentField }"

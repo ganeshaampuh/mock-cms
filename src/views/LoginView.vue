@@ -29,7 +29,7 @@ const router = useRouter()
 const onSubmit = handleSubmit((values) => {
   loginUser(values.userId, values.password).then((data) => {
     if (data.user) {
-      router.push('/profile')
+      router.push('/profile?section=basic')
       toast({
         title: 'Logged in!',
         description: 'You are now logged in.',

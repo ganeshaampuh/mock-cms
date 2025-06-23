@@ -7,11 +7,15 @@ import {
   SidebarHeader,
 } from '@/components/ui/sidebar'
 
+import { onMounted, ref } from 'vue'
+
 import { useRouter } from 'vue-router'
+
+import { getUser, getProfile } from '@/lib/supabase'
 
 const router = useRouter()
 
-const items = [
+const items = ref([
   {
     title: 'Basic Details',
     url: '/profile?section=basic',
@@ -21,14 +25,24 @@ const items = [
     url: '/profile?section=additional',
   },
   {
-    title: 'Spouse Details',
-    url: '/profile?section=spouse',
-  },
-  {
     title: 'Personal Preferences',
     url: '/profile?section=preferences',
   },
-]
+])
+
+onMounted(async () => {
+  const data = await getUser()
+  const profile = await getProfile(data.user?.id)
+
+  const isShowSpouse = profile.marital_status === 'Married'
+
+  if (isShowSpouse) {
+    items.value.push({
+      title: 'Spouse Details',
+      url: '/profile?section=spouse',
+    })
+  }
+})
 </script>
 
 <template>

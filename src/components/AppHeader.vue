@@ -31,8 +31,10 @@ const handleLogout = async () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem @click="router.push('/')"> Home </DropdownMenuItem>
-            <DropdownMenuItem @click="router.push('/profile')"> My Profile </DropdownMenuItem>
             <DropdownMenuItem @click="router.push('/profile?section=basic')">
+              My Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="router.push('/profile?section=basic&edit=true')">
               Edit Profile
             </DropdownMenuItem>
             <DropdownMenuItem @click="handleLogout"> Logout </DropdownMenuItem>
